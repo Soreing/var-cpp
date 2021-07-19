@@ -59,6 +59,11 @@ var& var::operator=(const var &val)
 			}
 
 			break;
+			
+		case function_t:
+			Function* fnc = (Function*)val.data;
+			data = (void*) new Function{fnc->params, fnc->fptr};
+			break;
 	}
 	return *this;
 }
@@ -449,6 +454,9 @@ void var::clean()
 				break;
 			case object_t: 
 				delete (vec<atr>*)data; 
+				break;
+			case function_t: 
+				delete (Function*)data; 
 				break;
 		}
 
