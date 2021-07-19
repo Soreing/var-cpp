@@ -176,6 +176,18 @@ var& var::operator=(Object val)
 	return *this;
 }
 
+var& var::operator=(var(*val)())
+{
+	if (data != NULL)
+	{	clean();
+	}
+
+	data = (void*)new Function{0, val};
+	type = function_t;
+
+	return *this;
+}
+
 var& var::operator[](str name)
 {
 	if (type != object_t)
@@ -211,6 +223,103 @@ var& var::operator[](size_t idx)
 	}
 
 	return (*arr)[idx];
+}
+
+var var::operator()()
+{
+	Function* fnc = (Function*) data;
+	if (type != function_t && fnc->params != 0) 
+	{	return var();
+	}
+
+	return ((var(*)())data)();
+}
+
+var var::operator()(var p1) 
+{ 
+	Function* fnc = (Function*) data;
+	if (type != function_t && fnc->params != 1) 
+	{	return var();
+	}
+
+	return ((var(*)(var)) (fnc->fptr) )(p1);
+}
+
+var var::operator()(var p1, var p2) 
+{ 
+	Function* fnc = (Function*) data;
+	if (type != function_t || fnc->params != 2) 
+	{	return var();
+	}
+
+	return ((var(*)(var, var)) (fnc->fptr) )
+		(p1, p2);
+}
+
+var var::operator()(var p1, var p2, var p3) 
+{ 
+	Function* fnc = (Function*) data;
+	if (type != function_t || fnc->params != 3) 
+	{	return var();
+	}
+
+	return ((var(*)(var, var, var)) (fnc->fptr) )
+		(p1, p2, p3);
+}
+
+var var::operator()(var p1, var p2, var p3, var p4) 
+{ 
+	Function* fnc = (Function*) data;
+	if (type != function_t || fnc->params != 4) 
+	{	return var();
+	}
+
+	return ((var(*)(var, var, var, var)) (fnc->fptr) )
+		(p1, p2, p3, p4);
+}
+
+var var::operator()(var p1, var p2, var p3, var p4, var p5) 
+{ 
+	Function* fnc = (Function*) data;
+	if (type != function_t || fnc->params != 5) 
+	{	return var();
+	}
+
+	return ((var(*)(var, var, var, var, var)) (fnc->fptr) )
+		(p1, p2, p3, p4, p5);
+}
+
+var var::operator()(var p1, var p2, var p3, var p4, var p5, var p6) 
+{ 
+	Function* fnc = (Function*) data;
+	if (type != function_t || fnc->params != 6) 
+	{	return var();
+	}
+
+	return ((var(*)(var, var, var, var, var, var)) (fnc->fptr) )
+		(p1, p2, p3, p4, p5, p6);
+}
+
+var var::operator()(var p1, var p2, var p3, var p4, var p5, var p6, var p7) 
+{ 
+	Function* fnc = (Function*) data;
+	if (type != function_t || fnc->params != 7) 
+	{	return var();
+	}
+
+	return ((var(*)(var, var, var, var, var, var, var)) (fnc->fptr) )
+		(p1, p2, p3, p4, p5, p6, p7);
+}
+
+var var::operator()(var p1, var p2, var p3, var p4, var p5, var p6, var p7, var p8) 
+{ 
+	Function* fnc = (Function*) data;
+	if (type != function_t || fnc->params != 8) 
+	{	return var();
+	}
+
+	return ((var(*)(var, var, var, var, var, var, var, var)) (fnc->fptr) )
+		(p1, p2, p3, p4, p5, p6, p7, p8);
 }
 
 // Convert the value of the var to the appropriate string based on type
@@ -271,7 +380,8 @@ str var::toString() const
 	}
 	else if (type == function_t)
 	{	// Generic function statement
-		return "[function]";
+		std::string count = std::to_string(((Function*)data)->params);
+		return "[function] (" + count + " Args)";
 	}
 
 	return "undefined";

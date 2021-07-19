@@ -48,6 +48,31 @@ public:
 	var& operator=(Object val);
 	var& operator=(const array &val);
 
+	var& operator=(var(*val)());
+
+	template<class... Args>
+	var& operator=(var(*val)(Args...))
+	{
+		if (data != NULL)
+		{	clean();
+		}
+
+		data = (void*)new Function{sizeof...(Args), val};
+		type = function_t;
+
+		return *this;
+	}
+
+	var operator()();
+	var operator()(var p1) ;
+	var operator()(var p1, var p2);
+	var operator()(var p1, var p2, var p3);
+	var operator()(var p1, var p2, var p3, var p4);
+	var operator()(var p1, var p2, var p3, var p4, var p5);
+	var operator()(var p1, var p2, var p3, var p4, var p5, var p6);
+	var operator()(var p1, var p2, var p3, var p4, var p5, var p6, var p7);
+	var operator()(var p1, var p2, var p3, var p4, var p5, var p6, var p7, var p8);
+
 	// Convert the value of the var to the appropriate string based on type
 	// Objects and arrays print all elements
 	str toString() const;
@@ -76,6 +101,12 @@ var::var(T val)
 // Load the value of the var to the ostream 
 std::ostream& operator<<(std::ostream& o, const var& v);
 
+
+// Function structure
+struct Function
+{	int params;
+	void* fptr;
+};
 
 // Named attributes for var objects
 struct atr
