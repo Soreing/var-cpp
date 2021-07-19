@@ -1,4 +1,5 @@
 #include "varcpp.h"
+#include <iostream>
 
 var::var() 
 	: data(NULL), type(undefined_t)
@@ -322,6 +323,37 @@ var var::operator()(var p1, var p2, var p3, var p4, var p5, var p6, var p7, var 
 		(p1, p2, p3, p4, p5, p6, p7, p8);
 }
 
+var var::operator+(var right)
+{
+	var result;
+
+	if(type <= real_t && right.type <= real_t)
+	{
+		double value = getNum(*this) + getNum(right);
+		varType rtype = type > right.type ? type : right.type;
+
+		switch(rtype)
+		{	case boolean_t: result = value == 0 ? false : true; break;
+			case integer_t: result = (int)value; break;
+			case real_t:    result = (double)value; break;
+		}
+	}
+	else if(type == text_t)
+	{	result = *(str*)data + right.toString();
+	}
+	else if(right.type == text_t)
+	{	result = toString() + *(str*)right.data;
+	}
+	else if(type == array_t && right.type == array_t)
+	{	mergeArrays(*this, right, result);
+	}
+	else if(type == object_t && right.type == object_t)
+	{	mergeObjects(*this, right, result);
+	}
+
+	return result;
+}
+
 // Convert the value of the var to the appropriate string based on type
 // Objects and arrays print all elements
 str var::toString() const
@@ -430,4 +462,59 @@ var::~var()
 	if (data != NULL)
 	{	clean();
 	}
+}
+
+double getNum(var& num)
+{
+	switch(num.type)
+	{
+		case boolean_t: return *(bool*)num.data ? 1 : 0;
+		case integer_t: return *(int*)num.data;
+		case real_t:    return *(double*)num.data;
+		default:        return 0;
+	}
+}
+
+void mergeObjects(var &left, var &right, var &res)
+{
+	res = Object();
+	vec<atr>* lAtr = (vec<atr>*)left.data;
+	vec<atr>* rAtr = (vec<atr>*)right.data;
+	vec<atr>* aAtr = (vec<atr>*)res.data;
+	
+	size_t size = lAtr->size() + rAtr->size();
+	aAtr->resize(size);
+	
+	size_t idx = 0;
+	for(; idx < lAtr->size(); idx++)
+	{	(*aAtr)[idx] = (*lAtr)[idx];
+	}
+
+	for(size_t i=0; i < rAtr->size(); i++, idx++)
+	{	(*aAtr)[idx] = (*rAtr)[i];
+	}
+
+	return;
+}
+
+void mergeArrays(var &left, var &right, var &res)
+{
+	res = array{};
+	vec<var>* lArr = (vec<var>*)left.data;
+	vec<var>* rArr = (vec<var>*)right.data;
+	vec<var>* aArr = (vec<var>*)res.data;
+	
+	size_t size = lArr->size() + rArr->size();
+	aArr->resize(size);
+	
+	size_t idx = 0;
+	for(; idx < lArr->size(); idx++)
+	{	(*aArr)[idx] = (*lArr)[idx];
+	}
+
+	for(size_t i=0; i < rArr->size(); i++, idx++)
+	{	(*aArr)[idx] = (*rArr)[i];
+	}
+
+	return;
 }

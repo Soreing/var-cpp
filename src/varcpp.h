@@ -73,10 +73,6 @@ public:
 	var operator()(var p1, var p2, var p3, var p4, var p5, var p6, var p7);
 	var operator()(var p1, var p2, var p3, var p4, var p5, var p6, var p7, var p8);
 
-	// Convert the value of the var to the appropriate string based on type
-	// Objects and arrays print all elements
-	str toString() const;
-
 	// Accesses an attribute in an object var
 	// The attributes are addressed by a tage name
 	var& operator[](str name);
@@ -84,6 +80,12 @@ public:
 	// Accesses an element in an array var
 	// The attributes are addressed by an index
 	var& operator[](size_t idx);
+
+	var operator+(var right);
+
+	// Convert the value of the var to the appropriate string based on type
+	// Objects and arrays print all elements
+	str toString() const;
 
 	// Clean memory allocation if the object contains any
 	void clean();
@@ -113,5 +115,9 @@ struct atr
 {	str name;
 	var val;
 };
+
+void mergeObjects(var &left, var &right, var &res);
+void mergeArrays(var &left, var &right, var &res);
+double getNum(var& num);
 
 #endif
