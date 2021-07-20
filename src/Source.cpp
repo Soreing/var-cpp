@@ -13,7 +13,7 @@ var add(var a, var b, var c)
 	return 0xDEAD;
 }
 
-int opPlusTest()
+/*int opPlusTest()
 {
 	var bol = true;
 	var num = 25;
@@ -47,7 +47,7 @@ int opPlusTest()
 	std::cout << (obj1+obj2) << "\n";
 
 	system("PAUSE");
-}
+}*/
 
 int main()
 {

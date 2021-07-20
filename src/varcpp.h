@@ -83,6 +83,10 @@ public:
 
 	var operator+(var right);
 
+	explicit operator bool();
+	explicit operator int();
+	explicit operator double();
+
 	// Convert the value of the var to the appropriate string based on type
 	// Objects and arrays print all elements
 	str toString() const;

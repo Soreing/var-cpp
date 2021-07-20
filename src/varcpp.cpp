@@ -359,6 +359,39 @@ var var::operator+(var right)
 	return result;
 }
 
+var::operator bool()
+{
+	switch(type)
+	{	case boolean_t:   return *(bool*)data;
+		case integer_t:   return *(int*)data != 0 ? true: false;
+		case real_t:      return *(double*)data != 0 ? true: false;
+		case array_t:     return data != NULL ? true : false;
+		case object_t:    return data != NULL ? true : false;
+		case function_t:  return data != NULL ? true : false;
+		default:          return 0;
+	}
+}
+
+var::operator int()
+{
+	switch(type)
+	{	case boolean_t: return *(bool*)data ? 1 : 0;
+		case integer_t: return *(int*)data;
+		case real_t:    return (int)*(double*)data;
+		default:        return 0; 
+	}
+}
+
+var::operator double()
+{
+	switch(type)
+	{	case boolean_t: return *(bool*)data ? 1 : 0;
+		case integer_t: return *(int*)data;
+		case real_t:    return *(double*)data;
+		default:        return 0; 
+	}
+}
+
 // Convert the value of the var to the appropriate string based on type
 // Objects and arrays print all elements
 str var::toString() const
