@@ -82,6 +82,22 @@ public:
 	var& operator[](size_t idx);
 
 	var operator+(var right);
+	var operator-(var right);
+	var operator*(var right);
+	var operator/(var right);
+	var operator%(var right);
+
+	bool operator&&(var right);
+	bool operator||(var right);
+
+	int compare(const var &right);
+
+	bool operator==(const var &right);
+	bool operator<(const var &right);
+	bool operator>(const var &right);
+	bool operator!=(const var &right);
+	bool operator<=(const var &right);
+	bool operator>=(const var &right);
 
 	explicit operator bool();
 	explicit operator int();
@@ -122,6 +138,6 @@ struct atr
 
 void mergeObjects(var &left, var &right, var &res);
 void mergeArrays(var &left, var &right, var &res);
-double getNum(var& num);
+double getNum(const var& num);
 
 #endif

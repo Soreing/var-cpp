@@ -1,5 +1,6 @@
 #include "varcpp.h"
 #include <iostream>
+#include <math.h>
 
 var::var() 
 	: data(NULL), type(undefined_t)
@@ -359,12 +360,205 @@ var var::operator+(var right)
 	return result;
 }
 
+var var::operator-(var right)
+{
+	var result;
+
+	if(type <= real_t && right.type <= real_t)
+	{
+		double value = getNum(*this) - getNum(right);
+		varType rtype = type > right.type ? type : right.type;
+
+		switch(rtype)
+		{	case boolean_t: result = value == 0 ? false : true; break;
+			case integer_t: result = (int)value; break;
+			case real_t:    result = (double)value; break;
+		}
+	}
+
+	return result;
+}
+
+var var::operator*(var right)
+{
+	var result;
+
+	if(type <= real_t && right.type <= real_t)
+	{
+		double value = getNum(*this) * getNum(right);
+		varType rtype = type > right.type ? type : right.type;
+
+		switch(rtype)
+		{	case boolean_t: result = value == 0 ? false : true; break;
+			case integer_t: result = (int)value; break;
+			case real_t:    result = (double)value; break;
+		}
+	}
+
+	return result;
+}
+
+var var::operator/(var right)
+{
+	var result;
+
+	if(type <= real_t && right.type <= real_t)
+	{
+		if(getNum(right)==0)
+		{	return var();
+		}
+
+		double value = getNum(*this) / getNum(right);
+		varType rtype = type > right.type ? type : right.type;
+
+		switch(rtype)
+		{	case boolean_t: result = value == 0 ? false : true; break;
+			case integer_t: result = (int)value; break;
+			case real_t:    result = (double)value; break;
+		}
+	}
+
+	return result;
+}
+
+var var::operator%(var right)
+{
+	var result;
+
+	if(type <= real_t && right.type <= real_t)
+	{
+		double lvalue = getNum(*this);
+		double rvalue = getNum(right);
+		varType rtype = type > right.type ? type : right.type;
+
+		if(getNum(right)==0)
+		{	return var();
+		}
+
+		switch(rtype)
+		{	case boolean_t: result = lvalue == 1 ? false : true; break;
+			case integer_t: result = (int)lvalue % (int)rvalue; break;
+			case real_t:    result = fmod(lvalue, rvalue); break;
+		}
+	}
+
+	return result;
+}
+
+bool var::operator&&(var right)
+{
+	return (bool)*this && (bool)right;
+}
+
+bool var::operator||(var right)
+{
+	return (bool)*this || (bool)right;
+}
+
+int var::compare(const var &right)
+{
+	size_t lStop = 0, rStop = 0;
+	double lVal = 0, rVal = 0;
+	str lTxt, rTxt;
+
+	if(type == text_t)
+	{	lTxt = *(str*)data;
+		if( lTxt.length() > 0 && isdigit(lTxt[0]) )
+		{	lVal = stod(lTxt, &lStop);
+		}
+	}
+
+	switch(type)
+	{	case boolean_t:
+		case integer_t:
+		case real_t:   lVal = getNum(*this); break;
+		case array_t:  lTxt = toString(); break;
+		case object_t: lTxt = toString(); break;
+	}
+
+	if(right.type == text_t)
+	{	rTxt = *(str*)right.data;
+		if( rTxt.length() > 0 && isdigit(rTxt[0]) )
+		{	rVal = stod(rTxt, &rStop);
+		}
+	}
+
+	switch(right.type)
+	{	case boolean_t:
+		case integer_t:
+		case real_t:   rVal = getNum(right); break;
+		case array_t:  rTxt = right.toString(); break;
+		case object_t: rTxt = right.toString(); break;
+	}
+
+	varType minType = type < right.type ? type : right.type;
+	varType maxType = type > right.type ? type : right.type;
+	
+	if(type == function_t && right.type == function_t)
+	{	return ((Function*)data)->fptr == ((Function*)right.data)->fptr ? 1 : -1;
+	}
+	if(maxType >= function_t)
+	{	return -1;
+	}
+	else if(minType >= text_t)
+	{	return lTxt < rTxt ? 0 : lTxt > rTxt ? 2 : 1;
+	}
+	else if(type <= real_t && right.type <= real_t)
+	{	return lVal < rVal ? 0 : lVal > rVal ? 2 : 1;
+	}
+	else if(type <= real_t)
+	{	if(rStop == rTxt.length())
+		{	return lVal < rVal ? 0 : lVal > rVal ? 2 : 1;
+		}
+	}
+	else if(right.type <= real_t)
+	{	if(lStop == lTxt.length())
+		{	return lVal < rVal ? 0 : lVal > rVal ? 2 : 1;
+		}
+	}
+
+	return -1; 
+}
+
+bool var::operator==(const var &right)
+{	
+	return compare(right) == 1;
+}
+
+bool var::operator<(const var &right)
+{
+	return compare(right) == 0;
+}
+
+bool var::operator>(const var &right)
+{	
+	return compare(right) == 2;
+}
+
+bool var::operator!=(const var &right)
+{	
+	return compare(right) != 1;
+}
+
+bool var::operator<=(const var &right)
+{
+	int res = compare(right);
+	return res == 0 || res == 1;
+}
+
+bool var::operator>=(const var &right)
+{	
+	int res = compare(right);
+	return res == 2 || res == 1;
+}
+
 var::operator bool()
 {
 	switch(type)
 	{	case boolean_t:   return *(bool*)data;
 		case integer_t:   return *(int*)data != 0 ? true: false;
 		case real_t:      return *(double*)data != 0 ? true: false;
+		case text_t:      return data != NULL ? true : false;
 		case array_t:     return data != NULL ? true : false;
 		case object_t:    return data != NULL ? true : false;
 		case function_t:  return data != NULL ? true : false;
@@ -374,6 +568,13 @@ var::operator bool()
 
 var::operator int()
 {
+	if(type == text_t)
+	{	size_t cpos = 0;
+		str* txt = (str*)data;
+		int num = stoi(*txt, &cpos);
+		return cpos == txt->length() && cpos > 0 ? num : 0; 
+	}
+
 	switch(type)
 	{	case boolean_t: return *(bool*)data ? 1 : 0;
 		case integer_t: return *(int*)data;
@@ -384,6 +585,13 @@ var::operator int()
 
 var::operator double()
 {
+	if(type == text_t)
+	{	size_t cpos = 0;
+		str* txt = (str*)data;
+		double num = stod(*txt, &cpos);
+		return cpos == txt->length() && cpos > 0 ? num : 0; 
+	}
+
 	switch(type)
 	{	case boolean_t: return *(bool*)data ? 1 : 0;
 		case integer_t: return *(int*)data;
@@ -505,7 +713,7 @@ var::~var()
 	}
 }
 
-double getNum(var& num)
+double getNum(const var& num)
 {
 	switch(num.type)
 	{
