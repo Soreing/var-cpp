@@ -272,3 +272,55 @@ size_t var::length()
 {
     return type == array_t ? ((array*)data)->size() : -1;
 }
+
+int var::push(const var &e)
+{
+    if(type != array_t)
+    {   throw "Error";
+    }
+
+    ((array*)data)->push_back(e);
+    return ((array*)data)->size();
+}
+
+int var::push_back(const var &e)
+{
+    if(type != array_t)
+    {   throw "Error";
+    }
+
+    ((array*)data)->push_back(e);
+    return ((array*)data)->size();
+}
+
+var var::pop()
+{
+    if(type != array_t)
+    {   throw "Error";
+    }
+
+    if(((array*)data)->size() == 0)
+    {    throw "Error";
+    }
+
+    var ret = ((array*)data)->back();
+    ((array*)data)->pop_back();
+
+    return ret;
+}
+
+var var::pop_back()
+{
+    if(type != array_t)
+    {   throw "Error";
+    }
+
+    if(((array*)data)->size() == 0)
+    {    throw "Error";
+    }
+
+    var ret = ((array*)data)->back();
+    ((array*)data)->pop_back();
+
+    return ret;
+}

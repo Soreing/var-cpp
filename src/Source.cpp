@@ -35,10 +35,13 @@ int main()
 	}
 
 	std::cout << a << "\n";
-
+	std::cout << a.push(100)<<"\n";
+	std::cout << a << "\n";
+	std::cout << a.pop() <<"\n";
+	std::cout << a << "\n";
 	//a.forEach([](var &e)->void { e = e + 1;});
 
-	std::cout << a.length() << "\n";
+	//std::cout << a.length() << "\n";
 
 	/*Bound bnd {30, 60};
 	bool res = a.some([](var e, void* params)->bool

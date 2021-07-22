@@ -107,6 +107,11 @@ public:
 	size_t indexOf(const var &key);
 	bool includes(const var &key);
 
+	int push(const var &e);
+	int push_back(const var &e);
+	var pop();
+	var pop_back();
+
 	void fill(size_t start, size_t end, var val);
 	void fill(size_t end, var val);
 
