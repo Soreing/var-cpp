@@ -15,6 +15,12 @@ var add(var a, var b, var c)
 
 int main()
 {
+	var a = array{};
+	a.fill(5, "Hello");
+	std::cout << a << "\n";
+
+	system("PAUSE");
+
 	var dat;
 	var num = 25;
 	var dec = 10.2;
