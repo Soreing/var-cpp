@@ -106,6 +106,9 @@ public:
 	void fill(size_t start, size_t end, var val);
 	void fill(size_t end, var val);
 
+	bool every(bool(*fnc)(var e));
+	bool every(bool(*fnc)(var e, void* params), void* params);
+
 	// Convert the value of the var to the appropriate string based on type
 	// Objects and arrays print all elements
 	str toString() const;

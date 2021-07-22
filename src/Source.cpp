@@ -13,10 +13,32 @@ var add(var a, var b, var c)
 	return 0xDEAD;
 }
 
+bool isHello(var element)
+{	return element == "Hello" ? true : false;
+}
+
+struct Package
+{	int val1;
+	int val2;
+};
+
 int main()
 {
 	var a = array{};
 	a.fill(5, "Hello");
+
+	Package pkg = {1, 2};
+	bool res = a.every([](var e, void* params)->bool
+	{	Package pk = *(Package*)params;
+		std::cout<< pk.val1 << pk.val2 <<"\n";
+		return e == "Hello" ? true : false;
+	}, (void*)&pkg);
+
+	std::cout << res << "\n";
+
+	a[3] = "notHello";
+	std::cout<< a.every(isHello) << "\n";
+
 	std::cout << a << "\n";
 
 	system("PAUSE");
