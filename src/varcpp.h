@@ -115,6 +115,12 @@ public:
 	var filter(bool(*fnc)(var e));
 	var filter(bool(*fnc)(var e, void* params), void* params);
 
+	var& find(bool(*fnc)(var e));
+	var& find(bool(*fnc)(var e, void* params), void* params);
+
+	int findIndex(bool(*fnc)(var e));
+	int findIndex(bool(*fnc)(var e, void* params), void* params);
+
 	// Convert the value of the var to the appropriate string based on type
 	// Objects and arrays print all elements
 	str toString() const;

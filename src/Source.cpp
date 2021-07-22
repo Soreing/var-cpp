@@ -31,20 +31,24 @@ int main()
 	
 	srand(0);
 	for(int i=0; i<10; i++)
-	{	a[i] = rand() % 10;
+	{	a[i] = rand() % 100;
 	}
 
 	std::cout << a << "\n";
 
-	Bound bnd {30, 60};
+	int idx = a.findIndex([](var e)->bool {return e == 37;});
+	std::cout<< idx <<"\n";
+	a[idx] = a[idx] + 2;
+
+	std::cout << a << "\n";
+
+	/*Bound bnd {30, 60};
 	bool res = a.some([](var e, void* params)->bool
 	{	
 		Bound lims = *(Bound*)params;
 		return ((e >= lims.lower) && (e <= lims.upper)) ? true : false;
 
-	}, (void*)&bnd);
-
-	std::cout << res << "\n";
+	}, (void*)&bnd); */
 
 	system("PAUSE");
 

@@ -1,4 +1,5 @@
 #include "varcpp.h"
+#include <iostream>
 
 void var::fill(size_t start, size_t end, var val)
 {
@@ -144,4 +145,68 @@ var var::filter(bool(*fnc)(var e, void* params), void* params)
 
     ((array*)result.data)->resize(rIdx);
     return result;
+}
+
+var& var::find(bool(*fnc)(var e))
+{
+    if(type != array_t)
+    {   throw "Error";
+    }
+
+    array* arr = (array*)data; 
+    for(size_t i=0; i < arr->size(); i++)
+    {   if(fnc((*arr)[i]))
+        {   return (*arr)[i];
+        }
+    }
+
+    throw "Error";
+}
+
+var& var::find(bool(*fnc)(var e, void* params), void* params)
+{
+     if(type != array_t)
+    {   throw "Error";
+    }
+
+    array* arr = (array*)data; 
+    for(size_t i=0; i<arr->size(); i++)
+    {   if(fnc((*arr)[i], params))
+        {   return (*arr)[i];
+        }
+    }
+
+    throw "Error";
+}
+
+int var::findIndex(bool(*fnc)(var e))
+{
+    if(type != array_t)
+    {   throw "Error";
+    }
+
+    array* arr = (array*)data; 
+    for(size_t i=0; i < arr->size(); i++)
+    {   if( fnc((*arr)[i]) )
+        {   return i;
+        }
+    }
+
+    return -1;
+}
+
+int var::findIndex(bool(*fnc)(var e, void* params), void* params)
+{
+    if(type != array_t)
+    {   throw "Error";
+    }
+
+    array* arr = (array*)data; 
+    for(size_t i=0; i < arr->size(); i++)
+    {   if(fnc((*arr)[i], params))
+        {   return i;
+        }
+    }
+
+    return -1;
 }
