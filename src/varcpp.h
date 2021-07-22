@@ -112,6 +112,11 @@ public:
 	var pop();
 	var pop_back();
 
+	int unshift(const var &e);
+	int push_front(const var &e);
+	var shift();
+	var pop_front();
+
 	void fill(size_t start, size_t end, var val);
 	void fill(size_t end, var val);
 

@@ -35,9 +35,9 @@ int main()
 	}
 
 	std::cout << a << "\n";
-	std::cout << a.push(100)<<"\n";
+	std::cout << a.unshift(100)<<"\n";
 	std::cout << a << "\n";
-	std::cout << a.pop() <<"\n";
+	std::cout << a.shift() <<"\n";
 	std::cout << a << "\n";
 	//a.forEach([](var &e)->void { e = e + 1;});
 

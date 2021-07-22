@@ -324,3 +324,59 @@ var var::pop_back()
 
     return ret;
 }
+
+int var::unshift(const var &e)
+{
+    if(type != array_t)
+    {   throw "Error";
+    }
+
+    array* arr = ((array*)data);
+    arr->insert(arr->begin(), e);
+    return arr->size();
+}
+
+int var::push_front(const var &e)
+{
+    if(type != array_t)
+    {   throw "Error";
+    }
+
+    array* arr = ((array*)data);
+    arr->insert(arr->begin(), e);
+    return arr->size();
+}
+
+var var::shift()
+{
+    if(type != array_t)
+    {   throw "Error";
+    }
+
+    if(((array*)data)->size() == 0)
+    {    throw "Error";
+    }
+
+    array* arr = ((array*)data);
+    var ret = arr->front();
+    arr->erase(arr->begin());
+
+    return ret;
+}
+
+var var::pop_front()
+{
+    if(type != array_t)
+    {   throw "Error";
+    }
+
+    if(((array*)data)->size() == 0)
+    {    throw "Error";
+    }
+
+    array* arr = ((array*)data);
+    var ret = arr->front();
+    arr->erase(arr->begin());
+
+    return ret;
+}
