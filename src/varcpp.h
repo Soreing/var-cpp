@@ -103,6 +103,10 @@ public:
 	explicit operator int();
 	explicit operator double();
 
+	size_t length();
+	size_t indexOf(const var &key);
+	bool includes(const var &key);
+
 	void fill(size_t start, size_t end, var val);
 	void fill(size_t end, var val);
 

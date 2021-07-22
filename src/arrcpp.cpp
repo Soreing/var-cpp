@@ -235,3 +235,40 @@ void var::forEach(void(*fnc)(var &e, void* params), void* params)
     {   fnc((*arr)[i], params);
     }
 }
+
+size_t var::indexOf(const var &key)
+{
+    if(type != array_t)
+    {   throw "Error";
+    }
+
+    array* arr = (array*)data; 
+    for(size_t i=0; i < arr->size(); i++)
+    {   if((*arr)[i] == key)
+        {   return i;
+        }
+    }
+
+    return -1;
+}
+
+bool var::includes(const var &key)
+{
+    if(type != array_t)
+    {   throw "Error";
+    }
+
+    array* arr = (array*)data; 
+    for(size_t i=0; i < arr->size(); i++)
+    {   if((*arr)[i] == key)
+        {   return true;
+        }
+    }
+
+    return false;
+}
+
+size_t var::length()
+{
+    return type == array_t ? ((array*)data)->size() : -1;
+}
