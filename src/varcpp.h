@@ -109,6 +109,9 @@ public:
 	bool every(bool(*fnc)(var e));
 	bool every(bool(*fnc)(var e, void* params), void* params);
 
+	bool some(bool(*fnc)(var e));
+	bool some(bool(*fnc)(var e, void* params), void* params);
+
 	var filter(bool(*fnc)(var e));
 	var filter(bool(*fnc)(var e, void* params), void* params);
 

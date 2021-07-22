@@ -70,6 +70,38 @@ bool var::every(bool(*fnc)(var e, void* params), void* params)
     return true;
 }
 
+bool var::some(bool(*fnc)(var e))
+{
+    if(type != array_t)
+    {   throw "Error";
+    }
+
+    array* arr = (array*)data;
+    for(size_t i=0; i<arr->size(); i++)
+    {   if(fnc((*arr)[i]))
+        {   return true;
+        }
+    }
+
+    return false;
+}
+
+bool var::some(bool(*fnc)(var e, void* params), void* params)
+{
+    if(type != array_t)
+    {   throw "Error";
+    }
+
+    array* arr = (array*)data;
+    for(size_t i=0; i<arr->size(); i++)
+    {   if(fnc((*arr)[i], params))
+        {   return true;
+        }
+    }
+
+    return false;
+}
+
 var var::filter(bool(*fnc)(var e))
 {
     if(type != array_t)
