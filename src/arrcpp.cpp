@@ -69,3 +69,47 @@ bool var::every(bool(*fnc)(var e, void* params), void* params)
 
     return true;
 }
+
+var var::filter(bool(*fnc)(var e))
+{
+    if(type != array_t)
+    {   throw "Error";
+    }
+
+    var result = array{};
+    array* arr = (array*)data;
+    ((array*)result.data)->resize(arr->size());
+
+    size_t rIdx = 0; 
+    for(size_t i=0; i<arr->size(); i++)
+    {   if(fnc((*arr)[i]))
+        {   result[rIdx] = (*arr)[i];
+            rIdx++;
+        }
+    }
+
+    ((array*)result.data)->resize(rIdx);
+    return result;
+}
+
+var var::filter(bool(*fnc)(var e, void* params), void* params)
+{
+    if(type != array_t)
+    {   throw "Error";
+    }
+
+    var result = array{};
+    array* arr = (array*)data;
+    ((array*)result.data)->resize(arr->size());
+
+    size_t rIdx = 0; 
+    for(size_t i=0; i<arr->size(); i++)
+    {   if(fnc((*arr)[i], params))
+        {   result[rIdx] = (*arr)[i];
+            rIdx++;
+        }
+    }
+
+    ((array*)result.data)->resize(rIdx);
+    return result;
+}

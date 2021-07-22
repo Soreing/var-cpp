@@ -109,6 +109,9 @@ public:
 	bool every(bool(*fnc)(var e));
 	bool every(bool(*fnc)(var e, void* params), void* params);
 
+	var filter(bool(*fnc)(var e));
+	var filter(bool(*fnc)(var e, void* params), void* params);
+
 	// Convert the value of the var to the appropriate string based on type
 	// Objects and arrays print all elements
 	str toString() const;

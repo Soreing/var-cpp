@@ -1,6 +1,8 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <stdlib.h>
+#include <time.h>
 
 #include "varcpp.h"
 
@@ -17,27 +19,30 @@ bool isHello(var element)
 {	return element == "Hello" ? true : false;
 }
 
-struct Package
-{	int val1;
-	int val2;
+struct Bound
+{	int lower;
+	int upper;
 };
 
 int main()
 {
 	var a = array{};
-	a.fill(5, "Hello");
+	a.fill(10, 0);
+	
+	srand(0);
+	for(int i=0; i<10; i++)
+	{	a[i] = rand() % 100;
+	}
 
-	Package pkg = {1, 2};
-	bool res = a.every([](var e, void* params)->bool
-	{	Package pk = *(Package*)params;
-		std::cout<< pk.val1 << pk.val2 <<"\n";
-		return e == "Hello" ? true : false;
-	}, (void*)&pkg);
+	std::cout << a << "\n";
 
-	std::cout << res << "\n";
+	Bound bnd {30, 60};
+	var res = a.filter([](var e, void* params)->bool
+	{	
+		Bound lims = *(Bound*)params;
+		return ((e >= lims.lower) && (e <= lims.upper)) ? true : false;
 
-	a[3] = "notHello";
-	std::cout<< a.every(isHello) << "\n";
+	}, (void*)&bnd);
 
 	std::cout << a << "\n";
 
