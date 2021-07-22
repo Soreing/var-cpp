@@ -121,6 +121,9 @@ public:
 	int findIndex(bool(*fnc)(var e));
 	int findIndex(bool(*fnc)(var e, void* params), void* params);
 
+	void forEach(void(*fnc)(var &e));
+	void forEach(void(*fnc)(var &e, void* params), void* params);
+
 	// Convert the value of the var to the appropriate string based on type
 	// Objects and arrays print all elements
 	str toString() const;

@@ -36,9 +36,7 @@ int main()
 
 	std::cout << a << "\n";
 
-	int idx = a.findIndex([](var e)->bool {return e == 37;});
-	std::cout<< idx <<"\n";
-	a[idx] = a[idx] + 2;
+	a.forEach([](var &e)->void { e = e + 1;});
 
 	std::cout << a << "\n";
 

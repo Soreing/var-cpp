@@ -210,3 +210,28 @@ int var::findIndex(bool(*fnc)(var e, void* params), void* params)
 
     return -1;
 }
+
+void var::forEach(void(*fnc)(var &e))
+{
+    if(type != array_t)
+    {   throw "Error";
+    }
+
+    array* arr = (array*)data; 
+    for(size_t i=0; i < arr->size(); i++)
+    {   fnc((*arr)[i]);
+    }
+
+}
+
+void var::forEach(void(*fnc)(var &e, void* params), void* params)
+{
+    if(type != array_t)
+    {   throw "Error";
+    }
+
+    array* arr = (array*)data; 
+    for(size_t i=0; i < arr->size(); i++)
+    {   fnc((*arr)[i], params);
+    }
+}
