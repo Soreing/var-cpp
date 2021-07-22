@@ -380,3 +380,59 @@ var var::pop_front()
 
     return ret;
 }
+
+int var::insert(size_t pos, const var &e)
+{
+    if(type != array_t)
+    {   throw "Error";
+    }
+
+    if(pos<0)
+    {   throw "Error";
+    }
+
+    array* arr = ((array*)data);
+    if(arr->size() < pos)
+    {   arr->resize(pos+1);
+        (*arr)[pos]=e;
+    }
+    else
+    {    arr->insert(arr->begin()+pos, e);
+    }
+
+    return arr->size();
+}
+
+int var::erase(size_t pos)
+{
+    if(type != array_t)
+    {   throw "Error";
+    }
+
+    if(pos<0)
+    {   throw "Error";
+    }
+
+    array* arr = ((array*)data);
+    if(arr->size() >= pos)
+    {   arr->erase(arr->begin()+pos);
+    }
+
+    return arr->size();
+}
+
+int var::erase(size_t start, size_t end)
+{
+    if(type != array_t)
+    {   throw "Error";
+    }
+
+    if(start > end || start < 0 || end < 0)
+    {   throw "Error";
+    }
+
+    array* arr = ((array*)data);
+    arr->erase(arr->begin() + start,  end < arr->size() ? arr->begin() + end : arr->end());
+    
+    return arr->size();
+}

@@ -35,9 +35,15 @@ int main()
 	}
 
 	std::cout << a << "\n";
-	std::cout << a.unshift(100)<<"\n";
+	a.insert(5, "Hello");
 	std::cout << a << "\n";
-	std::cout << a.shift() <<"\n";
+	a.insert(15, "Bye");
+	std::cout << a << "\n";
+	a.erase(5);
+	std::cout << a << "\n";
+	a.erase(5, 10);
+	std::cout << a << "\n";
+	a.erase(1, 100);
 	std::cout << a << "\n";
 	//a.forEach([](var &e)->void { e = e + 1;});
 

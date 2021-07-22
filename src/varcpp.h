@@ -117,6 +117,10 @@ public:
 	var shift();
 	var pop_front();
 
+	int insert(size_t pos, const var &e);
+	int erase(size_t pos);
+	int erase(size_t start, size_t end);
+
 	void fill(size_t start, size_t end, var val);
 	void fill(size_t end, var val);
 
