@@ -26,39 +26,6 @@ struct Bound
 
 int main()
 {
-	var a = array{};
-	a.fill(10, 0);
-	
-	srand(0);
-	for(int i=0; i<10; i++)
-	{	a[i] = rand() % 100;
-	}
-
-	std::cout << a << "\n";
-	a.insert(5, "Hello");
-	std::cout << a << "\n";
-	a.insert(15, "Bye");
-	std::cout << a << "\n";
-	a.erase(5);
-	std::cout << a << "\n";
-	a.erase(5, 10);
-	std::cout << a << "\n";
-	a.erase(1, 100);
-	std::cout << a << "\n";
-	//a.forEach([](var &e)->void { e = e + 1;});
-
-	//std::cout << a.length() << "\n";
-
-	/*Bound bnd {30, 60};
-	bool res = a.some([](var e, void* params)->bool
-	{	
-		Bound lims = *(Bound*)params;
-		return ((e >= lims.lower) && (e <= lims.upper)) ? true : false;
-
-	}, (void*)&bnd); */
-
-	system("PAUSE");
-
 	var dat;
 	var num = 25;
 	var dec = 10.2;

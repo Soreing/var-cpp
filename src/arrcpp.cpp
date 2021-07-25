@@ -436,3 +436,107 @@ int var::erase(size_t start, size_t end)
     
     return arr->size();
 }
+
+var var::slice(int beg, int end)
+{
+    if(type != array_t)
+    {   throw "Error";
+    }
+
+    array* arr = ((array*)data);
+    size_t len = arr->size();
+    size_t bIdx = beg >= 0 ? beg : len + beg;
+    size_t eIdx = end == 0 ? len : end > 0 ? end : len + end;
+
+    var res = array{};
+    array* rArr = ((array*)res.data);
+
+    std::cout<< bIdx << " " << eIdx << "\n";
+
+    if(bIdx < 0 || eIdx < 0 || eIdx <= bIdx || bIdx > len)
+    {   return res;
+    }
+
+    if(eIdx > len)
+    {   eIdx = len;
+    }
+
+    rArr->resize(eIdx-bIdx);
+    for(size_t e = 0, i = bIdx; i < eIdx; i++, e++)
+    {   (*rArr)[e] = (*arr)[i];
+    }
+
+    return res;
+}
+
+void var::splice(int beg, int count )
+{
+    splice(beg, count, var());
+}
+
+void var::splice(int beg, const var &elements)
+{
+    splice(beg, 0, elements);
+}
+
+void var::splice(int beg, int count, const var &elements)
+{
+    if(type != array_t)
+    {   throw "Error";
+    }
+
+    array* arr = ((array*)data);
+    array* eArr = ((array*)elements.data);
+    size_t len = arr->size();
+    size_t bIdx = beg >= 0 ? beg : len + beg + 1;
+    size_t num = bIdx + count > len ? len - bIdx : count;
+
+    if(bIdx < 0 || bIdx > len)
+    {   throw "Error";
+    }
+
+    if(num > 0)
+    {   arr->erase(arr->begin()+bIdx, arr->begin()+bIdx+num);
+    }
+
+    if(elements.type == array_t)
+    {   arr->insert(arr->begin()+bIdx, eArr-> begin(), eArr->end());
+    }
+    return;
+}
+
+str var::join(str separator)
+{
+    if(type != array_t)
+    {   throw "Error";
+    }
+
+    array* arr = ((array*)data);
+    
+    if(arr->size() == 0)
+    {   return "";
+    }
+
+    str res = (*arr)[0].toString();
+    for(size_t i = 0; i<arr->size(); i++)
+    {   res += separator + (*arr)[i].toString();
+    }
+
+    return res;
+}
+
+void var::reverse()
+{
+    if(type != array_t)
+    {   throw "Error";
+    }
+
+    var temp;
+    array* arr = ((array*)data);
+
+    for(size_t beg = 0, end = arr->size()-1; beg < end; beg++, end--)
+    {   temp = (*arr)[beg];
+        (*arr)[beg] = (*arr)[end];
+        (*arr)[end] = temp;
+    }
+}

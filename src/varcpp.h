@@ -121,6 +121,14 @@ public:
 	int erase(size_t pos);
 	int erase(size_t start, size_t end);
 
+	void splice(int beg, int count );
+	void splice(int beg, const var &elements);
+	void splice(int beg, int count, const var &elements);
+
+	var slice(int beg, int end = 0);
+	str join(str separator = ",");
+	void reverse();
+
 	void fill(size_t start, size_t end, var val);
 	void fill(size_t end, var val);
 
@@ -145,6 +153,7 @@ public:
 	// Convert the value of the var to the appropriate string based on type
 	// Objects and arrays print all elements
 	str toString() const;
+	int toBinary(char* buff, int size) const;
 
 	// Clean memory allocation if the object contains any
 	void clean();
