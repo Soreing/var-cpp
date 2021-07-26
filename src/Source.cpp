@@ -27,67 +27,30 @@ struct Bound
 
 int main()
 {
-	var obj = Object();
-	obj["width"]  = 1;
-	obj["height"] = 2;
-	obj["length"] = 3.5;
-	obj["weight"] = 6.75;
-	obj["price"]  = 20.99;
-
-
-	var a = array{
-		true, 
-		1000, 
-		10.2, 
-		"Hello_World", 
-		array{
-			true, 
-			1, 
-			10.2, 
-			"Hello_World"
-		}, 
-		obj, 
-		add, 
-		var()
-	};
+	var test = Object();
+	test["firstName"]  = "John";
+	test["lastName"] = "Smith";
+	test["isAlive"] = true;
+	test["age"] = 27;
+	test["price"]  = 20.99;
+	test["address"] = Object();
+	test["address"]["streetAddress"] = "21 2nd Street";
+	test["address"]["city"] = "New York";
+	test["address"]["state"] = "NY";
+	test["address"]["postalCode"] = "10021-3100";
+	test["phoneNumbers"] = array{Object(),Object()};
+	test["phoneNumbers"][0]["type"] = "home";
+	test["phoneNumbers"][0]["number"] = "212 555-1234";
+	test["phoneNumbers"][1]["type"] = "office";
+	test["phoneNumbers"][1]["number"] = "646 555-4567";
+	test["children"] = array{};
+	test["spouse"] = var();
 
 	char buffer[512];
-	size_t len = writeJCON(a, buffer, 512);
-	
-	var b = readJCON(buffer, 512);
-	std::cout<< b <<"\n";
+	size_t len = writeJCON(test, buffer, 512);
 
-	system("PAUSE");
-
-	var dat;
-	var num = 25;
-	var dec = 10.2;
-	var txt = "Sample Text";
-	var obj1 = Object();
-	var obj2 = Object();
-	var arr = array{1, 10.2, "Hello_World"};
-	var fnc = add;
-
-	obj1["width"]  = 1;
-	obj1["height"] = 2;
-	obj1["length"] = 3.5;
-
-	obj2["weight"] = 6.75;
-	obj2["price"]  = 20.99;
-
-	std::cout << dat << "\n";
-	std::cout << num << "\n";
-	std::cout << dec << "\n";
-	std::cout << txt << "\n";
-	std::cout << arr << "\n";
-	std::cout << obj1 << "\n";
-	std::cout << obj2 << "\n";
-	std::cout << (obj1+obj2) << "\n";
-	std::cout << fnc << "\n\n";
-
-	std::cout << "Function Returned: "<< fnc(1, "Hello", 12.5) <<"\n";
-	std::cout << "Function Returned: "<< fnc(1, 2) <<"\n";
-	std::cout << "Function Returned: "<< fnc(1, 2, 3, 4) <<"\n\n";
+	var res = readJCON(buffer, 512);
+	std::cout<< res.toJSON() <<"\n";
 
 	system("PAUSE");
 }

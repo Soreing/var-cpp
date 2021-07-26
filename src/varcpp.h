@@ -153,6 +153,7 @@ public:
 	// Convert the value of the var to the appropriate string based on type
 	// Objects and arrays print all elements
 	str toString() const;
+	str toJSON(str indent="") const;
 	int toBinary(char* buff, int size) const;
 
 	// Clean memory allocation if the object contains any

@@ -310,3 +310,79 @@ var readJCON(char* buff, const size_t size, size_t* bytes)
 
     return var();
 }
+
+str var::toJSON(str indent) const
+{
+    if(type != array_t && type != object_t)
+    {    return toString();
+    }
+
+    str JSON = "";
+    str lvlIndent = indent + "    ";
+
+    if(type == array_t)
+    {   array* arr = (array*)data;
+        size_t len = arr->size();
+        size_t end = len -1;
+
+        if(len == 0)
+        {   return "[ ]";
+        }
+    
+        JSON += "[";
+
+        for(size_t i = 0; i< len-1; i++)
+        {   JSON += "\n" + lvlIndent;
+            switch((*arr)[i].type)
+            {   case text_t: JSON += "\"" + (*arr)[i].toString() + "\""; break;
+                case object_t:
+                case array_t: JSON += (*arr)[i].toJSON(lvlIndent); break;
+                default: JSON += (*arr)[i].toString();
+            }
+            JSON += ",";
+        }
+
+        JSON += "\n" + lvlIndent;
+        switch((*arr)[end].type)
+        {   case text_t: JSON += "\"" + (*arr)[end].toString() + "\""; break;
+            case object_t:
+            case array_t: JSON += (*arr)[end].toJSON(lvlIndent); break;
+            default: JSON += (*arr)[end].toString();
+        }
+        JSON += "\n" + indent + "]";
+    }
+
+    if(type == object_t)
+    {   vec<atr>* arr = (vec<atr>*)data;
+        size_t len = arr->size();
+        size_t end = len -1;
+
+        if(len == 0)
+        {   return "{ }";
+        }
+    
+        JSON += "{";
+
+        for(size_t i = 0; i< len-1; i++)
+        {   JSON += "\n" + lvlIndent + "\"" + (*arr)[i].name + "\": ";
+            switch((*arr)[i].val.type)
+            {   case text_t: JSON += "\"" + (*arr)[i].val.toString() + "\""; break;
+                case object_t:
+                case array_t: JSON += (*arr)[i].val.toJSON(lvlIndent); break;
+                default: JSON += (*arr)[i].val.toString();
+            }
+            JSON += ",";
+        }
+
+        JSON += "\n" + lvlIndent + "\"" + (*arr)[end].name + "\": ";
+        switch((*arr)[end].val.type)
+        {   case text_t: JSON += "\"" + (*arr)[end].val.toString() + "\""; break;
+            case object_t:
+            case array_t: JSON += (*arr)[end].val.toJSON(lvlIndent); break;
+            default: JSON += (*arr)[end].val.toString();
+        }
+        JSON += "\n" + indent + "}";
+    }
+
+    return JSON;
+}
