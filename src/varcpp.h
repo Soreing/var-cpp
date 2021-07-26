@@ -184,6 +184,9 @@ struct atr
 	var val;
 };
 
+size_t writeJCON(const var& val, char* buff, const int size);
+var readJCON (char* buff, const size_t size, size_t* bytes = NULL);
+
 void mergeObjects(var &left, var &right, var &res);
 void mergeArrays(var &left, var &right, var &res);
 double getNum(const var& num);

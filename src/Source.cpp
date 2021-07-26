@@ -3,6 +3,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <time.h>
+#include <fstream>
 
 #include "varcpp.h"
 
@@ -26,6 +27,38 @@ struct Bound
 
 int main()
 {
+	var obj = Object();
+	obj["width"]  = 1;
+	obj["height"] = 2;
+	obj["length"] = 3.5;
+	obj["weight"] = 6.75;
+	obj["price"]  = 20.99;
+
+
+	var a = array{
+		true, 
+		1000, 
+		10.2, 
+		"Hello_World", 
+		array{
+			true, 
+			1, 
+			10.2, 
+			"Hello_World"
+		}, 
+		obj, 
+		add, 
+		var()
+	};
+
+	char buffer[512];
+	size_t len = writeJCON(a, buffer, 512);
+	
+	var b = readJCON(buffer, 512);
+	std::cout<< b <<"\n";
+
+	system("PAUSE");
+
 	var dat;
 	var num = 25;
 	var dec = 10.2;

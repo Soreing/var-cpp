@@ -621,7 +621,7 @@ str var::toString() const
 		// Get a reference to the vector
 		vec<var>* elem = (vec<var>*)data;
 		if (elem->size() == 0)
-		{	return "{ }";
+		{	return "[ ]";
 		}
 
 		// Set the string to the first element and 
@@ -633,7 +633,7 @@ str var::toString() const
 
 		// Format the output to be between braces
 		// and return the result
-		res = "{ " + res + " }";
+		res = "[ " + res + " ]";
 		return res;
 	}
 	else if (type == object_t)
