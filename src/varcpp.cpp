@@ -351,10 +351,10 @@ var var::operator+(var right)
 	{	result = toString() + *(str*)right.data;
 	}
 	else if(type == array_t && right.type == array_t)
-	{	mergeArrays(*this, right, result);
+	{	addArrays(*this, right, result);
 	}
 	else if(type == object_t && right.type == object_t)
-	{	mergeObjects(*this, right, result);
+	{	addObjects(*this, right, result);
 	}
 
 	return result;
@@ -443,6 +443,151 @@ var var::operator%(var right)
 	}
 
 	return result;
+}
+
+var& var::operator+=(var right)
+{
+	if(type <= real_t && right.type <= real_t)
+	{
+		double value = getNum(*this) + getNum(right);
+		switch(type)
+		{	case boolean_t: *(bool*)data = value == 0 ? false : true; break;
+			case integer_t: *(int*)data = (int)value; break;
+			case real_t:    *(double*)data = (double)value; break;
+		}
+	}
+	else if(type == text_t)
+	{	*(str*)data += right.toString();
+	}
+	else if(right.type == text_t)
+	{	*(str*)right.data = toString() + *(str*)right.data;
+	}
+	else if(type == array_t && right.type == array_t)
+	{	mergeArrays(*this, right);
+	}
+	else if(type == object_t && right.type == object_t)
+	{	mergeObjects(*this, right);
+	}
+
+	return *this;
+}
+
+var& var::operator-=(var right)
+{
+	if(type <= real_t && right.type <= real_t)
+	{
+		double value = getNum(*this) - getNum(right);
+		switch(type)
+		{	case boolean_t: *(bool*)data = value == 0 ? false : true; break;
+			case integer_t: *(int*)data = (int)value; break;
+			case real_t:    *(double*)data = (double)value; break;
+		}
+	}
+
+	return *this;
+}
+
+var& var::operator*=(var right)
+{
+	if(type <= real_t && right.type <= real_t)
+	{
+		double value = getNum(*this) * getNum(right);
+		switch(type)
+		{	case boolean_t: *(bool*)data = value == 0 ? false : true; break;
+			case integer_t: *(int*)data = (int)value; break;
+			case real_t:    *(double*)data = (double)value; break;
+		}
+	}
+
+	return *this;
+}
+
+var& var::operator/=(var right)
+{
+	if(type <= real_t && right.type <= real_t)
+	{
+		if(getNum(right)==0)
+		{	*this = var();
+			return *this;
+		}
+
+		double value = getNum(*this) / getNum(right);
+		switch(type)
+		{	case boolean_t: *(bool*)data = value == 0 ? false : true; break;
+			case integer_t: *(int*)data = (int)value; break;
+			case real_t:    *(double*)data = (double)value; break;
+		}
+	}
+
+	return *this;
+}
+
+var& var::operator%=(var right)
+{
+	if(type <= real_t && right.type <= real_t)
+	{
+		double lvalue = getNum(*this);
+		double rvalue = getNum(right);
+		varType rtype = type > right.type ? type : right.type;
+
+		if(getNum(right)==0)
+		{	return *this = var();
+		}
+
+		switch(rtype)
+		{	case boolean_t: *(bool*)data = lvalue == 1 ? false : true; break;
+			case integer_t: *(int*)data = (int)lvalue % (int)rvalue; break;
+			case real_t:    *(double*)data = fmod(lvalue, rvalue); break;
+		}
+	}
+
+	return *this;
+}
+
+var var::operator++(int)
+{
+	var copy = *this;
+	switch(copy.type)
+	{	case boolean_t: *(bool*)data = true; break;
+		case integer_t: *(int*)data += 1; break;
+		case real_t:    *(double*)data += 1; break;
+	}
+
+	return copy;
+}
+
+var var::operator--(int)
+{
+	var copy = *this;
+	switch(type)
+	{	case boolean_t: *(bool*)data = false; break;
+		case integer_t: *(int*)data -= 1; break;
+		case real_t:    *(double*)data -= 1; break;
+	}
+
+	return copy;
+}
+
+var& var::operator++()
+{
+	switch(type)
+	{	case boolean_t: *(bool*)data = true; break;
+		case integer_t: *(int*)data += 1; break;
+		case real_t:    *(double*)data += 1; break;
+	}
+
+	return *this;
+}
+
+var& var::operator--()
+{
+	switch(type)
+	{	case boolean_t: *(bool*)data = false; break;
+		case integer_t: *(int*)data -= 1; break;
+		case real_t:    *(double*)data -= 1; break;
+	}
+
+	return *this;
 }
 
 bool var::operator&&(var right)
@@ -724,7 +869,7 @@ double getNum(const var& num)
 	}
 }
 
-void mergeObjects(var &left, var &right, var &res)
+void addObjects(var &left, var &right, var &res)
 {
 	res = Object();
 	vec<atr>* lAtr = (vec<atr>*)left.data;
@@ -746,7 +891,7 @@ void mergeObjects(var &left, var &right, var &res)
 	return;
 }
 
-void mergeArrays(var &left, var &right, var &res)
+void addArrays(var &left, var &right, var &res)
 {
 	res = array{};
 	vec<var>* lArr = (vec<var>*)left.data;
@@ -763,6 +908,38 @@ void mergeArrays(var &left, var &right, var &res)
 
 	for(size_t i=0; i < rArr->size(); i++, idx++)
 	{	(*aArr)[idx] = (*rArr)[i];
+	}
+
+	return;
+}
+
+void mergeObjects(var &left, var &right)
+{
+	vec<atr>* lAtr = (vec<atr>*)left.data;
+	vec<atr>* rAtr = (vec<atr>*)right.data;
+	
+	size_t idx = lAtr->size();
+	size_t size = lAtr->size() + rAtr->size();
+	lAtr->resize(size);
+	
+	for(size_t i=0; i < rAtr->size(); i++, idx++)
+	{	(*lAtr)[idx] = (*rAtr)[i];
+	}
+
+	return;
+}
+
+void mergeArrays(var &left, var &right)
+{
+	vec<var>* lArr = (vec<var>*)left.data;
+	vec<var>* rArr = (vec<var>*)right.data;
+	
+	size_t idx = lArr->size();
+	size_t size = lArr->size() + rArr->size();
+	lArr->resize(size);
+
+	for(size_t i=0; i < rArr->size(); i++, idx++)
+	{	(*lArr)[idx] = (*rArr)[i];
 	}
 
 	return;

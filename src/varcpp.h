@@ -87,6 +87,17 @@ public:
 	var operator/(var right);
 	var operator%(var right);
 
+	var& operator+=(var right);
+	var& operator-=(var right);
+	var& operator*=(var right);
+	var& operator/=(var right);
+	var& operator%=(var right);
+
+	var operator++(int);
+	var operator--(int);
+	var& operator++();
+	var& operator--();
+
 	bool operator&&(var right);
 	bool operator||(var right);
 
@@ -188,8 +199,10 @@ struct atr
 size_t writeJCON(const var& val, char* buff, const int size);
 var readJCON (char* buff, const size_t size, size_t* bytes = NULL);
 
-void mergeObjects(var &left, var &right, var &res);
-void mergeArrays(var &left, var &right, var &res);
+void addObjects(var &left, var &right, var &res);
+void addArrays(var &left, var &right, var &res);
+void mergeObjects(var &left, var &right);
+void mergeArrays(var &left, var &right);
 double getNum(const var& num);
 
 #endif

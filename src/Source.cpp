@@ -27,7 +27,7 @@ struct Bound
 
 int main()
 {
-	var test = Object();
+	/*var test = Object();
 	test["firstName"]  = "John";
 	test["lastName"] = "Smith";
 	test["isAlive"] = true;
@@ -50,7 +50,18 @@ int main()
 	size_t len = writeJCON(test, buffer, 512);
 
 	var res = readJCON(buffer, 512);
-	std::cout<< res.toJSON() <<"\n";
+	std::cout<< res.toJSON() <<"\n";*/
+
+	var bol = true;
+	var num = 5;
+	var dec = 10.2;
+	var txt = "Hello";
+	var arr = array{1,2,3};
+
+	std::cout<< (++dec) <<"\n"; 
+	std::cout<< dec <<"\n"; 
+	std::cout<< (dec++) <<"\n"; 
+	std::cout<< dec <<"\n"; 
 
 	system("PAUSE");
 }
