@@ -21,22 +21,19 @@ class Object {};
 // The original type of the variable is converted to an internal varType for operations
 class var
 {
-public:
+private:
 	void*   data;	// Pointer to the allocated data. void* is universal
 	varType type;	// Internal type of the variable for operations
 
 public:
+	// Constructors
 	var();
 	var(void* data, varType type);
-
-	// Copy Constructor and Assignment
 	var(const var &val);
+	template <class T> var(T val);
+
+	// Assignment Operator
 	var& operator=(const var &val);
-
-	// Delegate the construction of any type to the assignment operator
-	template <class T>
-	var(T val);
-
 	var& operator=(int    val);
 	var& operator=(short  val);
 	var& operator=(long   val);
@@ -48,116 +45,135 @@ public:
 	var& operator=(Object val);
 	var& operator=(const array &val);
 
+	template<class... Args>
+	var& operator=(var(*val)(Args...));
 	var& operator=(var(*val)());
 
-	template<class... Args>
-	var& operator=(var(*val)(Args...))
-	{
-		if (data != NULL)
-		{	clean();
-		}
+	// () Operator for calling functions, up to 8 parameters
+	var operator()() const;
+	var operator()(var p1) const;
+	var operator()(var p1, var p2) const;
+	var operator()(var p1, var p2, var p3) const;
+	var operator()(var p1, var p2, var p3, var p4) const;
+	var operator()(var p1, var p2, var p3, var p4, var p5) const;
+	var operator()(var p1, var p2, var p3, var p4, var p5, var p6) const;
+	var operator()(var p1, var p2, var p3, var p4, var p5, var p6, var p7) const;
+	var operator()(var p1, var p2, var p3, var p4, var p5, var p6, var p7, var p8) const;
 
-		data = (void*)new Function{sizeof...(Args), val};
-		type = function_t;
+	// [] Operator for accessing attributes in Objects and elements in Arrays
+	var& operator[](str name) const;
+	var& operator[](size_t idx) const;
 
-		return *this;
-	}
+	// C-Style Type Cast Operators
+	explicit operator bool() const;
+	explicit operator int() const;
+	explicit operator double() const;
 
-	var operator()();
-	var operator()(var p1) ;
-	var operator()(var p1, var p2);
-	var operator()(var p1, var p2, var p3);
-	var operator()(var p1, var p2, var p3, var p4);
-	var operator()(var p1, var p2, var p3, var p4, var p5);
-	var operator()(var p1, var p2, var p3, var p4, var p5, var p6);
-	var operator()(var p1, var p2, var p3, var p4, var p5, var p6, var p7);
-	var operator()(var p1, var p2, var p3, var p4, var p5, var p6, var p7, var p8);
+	// Arithmetic Operators
+	var operator+(const var &right) const;
+	var operator-(const var &right) const;
+	var operator*(const var &right) const;
+	var operator/(const var &right) const;
+	var operator%(const var &right) const;
 
-	// Accesses an attribute in an object var
-	// The attributes are addressed by a tage name
-	var& operator[](str name);
+	// Compound Arithmetic Operators with Assignment
+	var& operator+=(const var &right);
+	var& operator-=(const var &right);
+	var& operator*=(const var &right);
+	var& operator/=(const var &right);
+	var& operator%=(const var &right);
 
-	// Accesses an element in an array var
-	// The attributes are addressed by an index
-	var& operator[](size_t idx);
-
-	var operator+(var right);
-	var operator-(var right);
-	var operator*(var right);
-	var operator/(var right);
-	var operator%(var right);
-
-	var& operator+=(var right);
-	var& operator-=(var right);
-	var& operator*=(var right);
-	var& operator/=(var right);
-	var& operator%=(var right);
-
-	var operator++(int);
-	var operator--(int);
+	// Increment and Decrement Operators (Pre and Post)
 	var& operator++();
 	var& operator--();
+	var operator++(int);
+	var operator--(int);
 
-	bool operator&&(var right);
-	bool operator||(var right);
+	// Comparison Function for Relational Operators
+	int compare(const var &right) const;
 
-	int compare(const var &right);
+	// Logical AND and OR Operators 
+	bool operator&&(const var &right) const;
+	bool operator||(const var &right) const;
 
-	bool operator==(const var &right);
-	bool operator<(const var &right);
-	bool operator>(const var &right);
-	bool operator!=(const var &right);
-	bool operator<=(const var &right);
-	bool operator>=(const var &right);
+	// Relational Operators
+	bool operator==(const var &right) const;
+	bool operator<(const var &right)  const;
+	bool operator>(const var &right)  const;
+	bool operator!=(const var &right) const;
+	bool operator<=(const var &right) const;
+	bool operator>=(const var &right) const;
 
-	explicit operator bool();
-	explicit operator int();
-	explicit operator double();
+	// Gets the length of an array
+	size_t length() const;
 
-	size_t length();
-	size_t indexOf(const var &key);
-	bool includes(const var &key);
+	// Checks if the array includes an element
+	bool includes(const var &key) const;
 
+	// Returns the index of an element
+	size_t indexOf(const var &key) const;
+	
+	// Reverses the contents of an array
+	void reverse();
+
+
+	// Push a new element to the end of the array
 	int push(const var &e);
 	int push_back(const var &e);
+	// Remove and return an element from the end of the array
 	var pop();
 	var pop_back();
 
+	// Push a new element to the beginning of the array
 	int unshift(const var &e);
 	int push_front(const var &e);
+	// Remove and return an element from the beginning of the array
 	var shift();
 	var pop_front();
 
-	int insert(size_t pos, const var &e);
-	int erase(size_t pos);
-	int erase(size_t start, size_t end);
+	// Inserts a new element at a position in the array
+	int insert(int pos, const var &e);
+	
+	//Erases one or a range of elements from the array
+	int erase(int pos);
+	int erase(int start, int end);
 
+	// Erases and/or Inserts elements from/to the array 
 	void splice(int beg, int count );
 	void splice(int beg, const var &elements);
 	void splice(int beg, int count, const var &elements);
 
+	// Returns a sub section of the array
 	var slice(int beg, int end = 0);
-	str join(str separator = ",");
-	void reverse();
 
-	void fill(size_t start, size_t end, var val);
-	void fill(size_t end, var val);
+	// Joins the elements in the array with a separator string
+	str join(str separator = ",") const;
 
-	bool every(bool(*fnc)(var e));
-	bool every(bool(*fnc)(var e, void* params), void* params);
+	// Fills the array with values between indexes
+	void fill(int start, int end, const var &val);
+	void fill(int end, const var &val);
 
-	bool some(bool(*fnc)(var e));
-	bool some(bool(*fnc)(var e, void* params), void* params);
+	// Tests if every element of an array resolves to true for a function
+	bool every(bool(*fnc)(var e)) const;
+	bool every(bool(*fnc)(var e, void* params), void* params) const;
 
-	var filter(bool(*fnc)(var e));
-	var filter(bool(*fnc)(var e, void* params), void* params);
+	// Tests if at least one element of an array resolves to true for a function
+	bool some(bool(*fnc)(var e)) const;
+	bool some(bool(*fnc)(var e, void* params), void* params) const;
 
-	var& find(bool(*fnc)(var e));
-	var& find(bool(*fnc)(var e, void* params), void* params);
+	// Returns a new array with only elements that resolved to true for a function
+	var filter(bool(*fnc)(var e)) const;
+	var filter(bool(*fnc)(var e, void* params), void* params) const;
 
-	int findIndex(bool(*fnc)(var e));
-	int findIndex(bool(*fnc)(var e, void* params), void* params);
+	// Returns the first element in an array that resolved to true for a function
+	var& find(bool(*fnc)(var e)) const;
+	var& find(bool(*fnc)(var e, void* params), void* params) const;
 
+	// Returns the index of the first element in an array that resolved to true for a function
+	size_t findIndex(bool(*fnc)(var e)) const;
+	size_t findIndex(bool(*fnc)(var e, void* params), void* params) const;
+
+	// Calls a function with each element in an array
 	void forEach(void(*fnc)(var &e));
 	void forEach(void(*fnc)(var &e, void* params), void* params);
 
@@ -167,11 +183,17 @@ public:
 	str toJSON(str indent="") const;
 	int toBinary(char* buff, int size) const;
 
+	// Getters & Setters
+	void* getData() const;
+	varType getType() const;
+
 	// Clean memory allocation if the object contains any
 	void clean();
-
 	~var();
 };
+
+// Load the value of the var to the ostream 
+std::ostream& operator<<(std::ostream& o, const var& v);
 
 template <class T>
 var::var(T val)
@@ -180,9 +202,22 @@ var::var(T val)
 	this->operator=(val);
 }
 
-// Load the value of the var to the ostream 
-std::ostream& operator<<(std::ostream& o, const var& v);
+template<class... Args>
+var& var::operator=(var(*val)(Args...))
+{
+	if (data != NULL)
+	{	clean();
+	}
 
+	type = function_t;
+	data = (void*)new Function{sizeof...(Args), val};
+	return *this;
+}
+
+// Write var object to binary data
+size_t writeBinary(const var& val, char* buff, const int size);
+// Read var object from binary data
+var readBinary(char* buff, const size_t size, size_t* bytes = NULL);
 
 // Function structure
 struct Function
@@ -195,14 +230,5 @@ struct atr
 {	str name;
 	var val;
 };
-
-size_t writeJCON(const var& val, char* buff, const int size);
-var readJCON (char* buff, const size_t size, size_t* bytes = NULL);
-
-void addObjects(var &left, var &right, var &res);
-void addArrays(var &left, var &right, var &res);
-void mergeObjects(var &left, var &right);
-void mergeArrays(var &left, var &right);
-double getNum(const var& num);
 
 #endif
