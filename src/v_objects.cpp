@@ -1,6 +1,6 @@
 #include "varcpp.h"
 
-#define ASSERT_SIZE(capacity, requirement) if(capacity<requirement) {throw "Error";}
+#define ASSERT_SIZE(capacity, requirement) if(capacity<requirement) {throw var::BufferSizeException();}
 #define ASSIGN_OPTIONAL(ptr, val) if(ptr!=NULL) {*ptr = val;}
 
 // Construct a Tag to identify the type and size of different vars

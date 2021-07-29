@@ -2,8 +2,8 @@
 #include <iostream>
 #include <math.h>
 
-#define ASSERT_ARRAY    if(type!=array_t) {throw "Error";}
-#define ASSERT_OBJECT   if(type!=object_t) {throw "Error";}
+#define ASSERT_ARRAY    if(type!=array_t) {throw var::TypeMismatchException();}
+#define ASSERT_OBJECT   if(type!=object_t) {throw var::TypeMismatchException();}
 
 #define CELAN_PREVIOUS_ALLOCATION if(data != NULL) {clean();}
 

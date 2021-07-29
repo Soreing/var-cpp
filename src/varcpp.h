@@ -183,6 +183,13 @@ public:
 	str toJSON(str indent="") const;
 	int toBinary(char* buff, int size) const;
 
+	// Exception classes
+	class ArrayIncorrectRangeException{};
+	class ArrayIncorrectIndexException{};
+	class ArrayElementNotFoundException{};
+	class TypeMismatchException{};
+	class BufferSizeException{};
+
 	// Getters & Setters
 	void* getData() const;
 	varType getType() const;

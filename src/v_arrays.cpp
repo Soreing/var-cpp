@@ -1,13 +1,12 @@
 #include "varcpp.h"
 
-#define ASSERT_ARRAY(a)    if((a)->type!=array_t) {throw "Error";}
-#define ASSERT_ARRAY(a)    if((a)->type!=array_t) {throw "Error";}
-#define ASSERT_NOTEMPTY if(length()==0) {throw "Error";}
+#define ASSERT_ARRAY(a)    if((a)->type!=array_t) {throw var::TypeMismatchException();}
+#define ASSERT_NOTEMPTY if(length()==0) {throw var::ArrayElementNotFoundException();}
 
-#define ASSERT_RANGE(b, e, len) if(b<0 || e<0 || e<b) {throw "Error";}
-#define ASSERT_INDEX(i) if(i<0) {throw "Error";}
-#define ASSERT_RANGE_STRICT(b, e, len) if(b<0 || e<0 || e<b || b>=len || e >len) {throw "Error";}
-#define ASSERT_INDEX_STRICT(i, len) if(i<0 || i>=len) {throw "Error";}
+#define ASSERT_RANGE(b, e, len) if(b<0 || e<0 || e<b) {throw var::ArrayIncorrectRangeException();}
+#define ASSERT_INDEX(i) if(i<0) {throw var::ArrayIncorrectIndexException();}
+#define ASSERT_RANGE_STRICT(b, e, len) if(b<0 || e<0 || e<b || b>=len || e >len) {throw var::ArrayIncorrectRangeException();}
+#define ASSERT_INDEX_STRICT(i, len) if(i<0 || i>=len) {throw var::ArrayIncorrectIndexException();}
 
 // Generates the correct index range for array functions
 // Negative beg/end indicate index from the end of the array
@@ -182,7 +181,7 @@ var& var::find(bool(*fnc)(var e)) const
         }
     }
 
-    throw "Error";
+    throw var::ArrayElementNotFoundException();
 }
 
 // Returns the first element that resolves to true for some given function call
@@ -199,7 +198,7 @@ var& var::find(bool(*fnc)(var e, void* params), void* params) const
         }
     }
 
-    throw "Error";
+    throw var::ArrayElementNotFoundException();
 }
 
 // Returns the index of the first element that resolves to true for some given function call
