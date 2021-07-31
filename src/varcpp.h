@@ -5,9 +5,10 @@
 #include <vector>
 
 // Internal var types for operations
-enum varType { boolean_t, integer_t, real_t, text_t, array_t, object_t, function_t, undefined_t };
+enum varType { boolean_t, integer_t, real_t, text_t, array_t, object_t, blob_t, function_t, undefined_t };
 
 struct Function;			// Functions
+struct blob;				// Binary Large Objects
 struct atr;					// Attributes
 
 #define vec std::vector		// std::vector shortcut macro
@@ -43,8 +44,9 @@ public:
 	var& operator=(float  val);
 	var& operator=(str    val);
 	var& operator=(cstr   val);
-	var& operator=(const object &val);
+	var& operator=(blob   val);
 	var& operator=(const array  &val);
+	var& operator=(const object &val);
 
 	template<class... Args>
 	var& operator=(var(*val)(Args...));
@@ -222,6 +224,12 @@ var readBinary(char* buff, const size_t size, size_t* bytes = NULL);
 struct Function
 {	int params;
 	void* fptr;
+};
+
+// Binary Large Object structure
+struct blob
+{	char* arr;
+	size_t size;
 };
 
 // Named attributes for var objects

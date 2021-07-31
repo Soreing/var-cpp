@@ -7,6 +7,10 @@
 
 #define CELAN_PREVIOUS_ALLOCATION if(data != NULL) {clean();}
 
+const char hexdec[16] = {
+	'0','1','2','3','4','5','6','7',
+	'8','9','a','b','c','d','e','f'
+};
 
 void* var::getData() const
 {	return data;
@@ -40,8 +44,10 @@ var::var(const var &val)
 var& var::operator=(const var &val)
 {
 	type = val.type;
-	array* elements   = NULL;
+	array* elements    = NULL;
 	object* attributes = NULL;
+	blob* oldBlob = NULL;
+	blob* newBlob = NULL;
 
 	switch (type)
 	{	case boolean_t:
@@ -79,7 +85,15 @@ var& var::operator=(const var &val)
 			}
 
 			break;
+
+		case blob_t:
+			oldBlob = (blob*)val.data;
+			data = (void*) new blob{new char[oldBlob->size], oldBlob->size};
 			
+			newBlob = (blob*)data;
+			memcpy(newBlob->arr, oldBlob->arr, newBlob->size);
+			break;
+
 		case function_t:
 			Function* fnc = (Function*)val.data;
 			data = (void*) new Function{fnc->params, fnc->fptr};
@@ -151,6 +165,18 @@ var& var::operator=(cstr val)
 	type = text_t; 
 	data = (void*)new str(str(val)); 
 	return *this; 
+}
+
+var& var::operator=(blob val)
+{
+	CELAN_PREVIOUS_ALLOCATION
+	type = blob_t;
+	data = (void*) new blob{new char[val.size], val.size};
+			
+	blob* newBlob = (blob*)data;
+	memcpy(newBlob->arr, val.arr, newBlob->size);
+
+	return *this;
 }
 
 var& var::operator=(const array &val)
@@ -354,6 +380,7 @@ var::operator bool() const
 		case text_t:      return data != NULL ? true : false;
 		case array_t:     return data != NULL ? true : false;
 		case object_t:    return data != NULL ? true : false;
+		case blob_t:      return data != NULL ? true : false;
 		case function_t:  return data != NULL ? true : false;
 		default:          return 0;
 	}
@@ -427,7 +454,7 @@ str var::toString() const
 		// Set the string to the first element and 
 		// add every other element with a comma
 		str res = elem->at(0).toString();
-		for (int i = 1; i < (int)elem->size(); i++)
+		for (size_t i = 1; i < elem->size(); i++)
 		{	res += ", " + elem->at(i).toString();
 		}
 
@@ -446,13 +473,27 @@ str var::toString() const
 		// Set the string to the first element and 
 		// add every other element with a comma, including the name
 		str res = attr->at(0).name + ":" + attr->at(0).val.toString();
-		for (int i = 1; i < (int)attr->size(); i++)
+		for (size_t i = 1; i < attr->size(); i++)
 		{	res += ", " + attr->at(i).name + ":" + attr->at(i).val.toString();
 		}
 
 		// Format the output to be between braces
 		// and return the result
 		res = "{ " + res + " }";
+		return res;
+	}
+	else if (type == blob_t)
+	{
+		blob* blb = (blob*)data;
+		str res = "0x";
+
+		// Add bytes in hexadecimal to the string
+		for (size_t i = 0; i < blb->size; i++)
+		{				
+			res += hexdec[ (unsigned char)(blb->arr[i]) >> 4 ];
+			res += hexdec[ (unsigned char)(blb->arr[i]) & 0x0F ];
+		}
+
 		return res;
 	}
 	else if (type == function_t)
@@ -494,6 +535,10 @@ void var::clean()
 				break;
 			case object_t: 
 				delete (object*)data; 
+				break;
+			case blob_t:
+				delete[] ((blob*)data)->arr;
+				delete (blob*)data;
 				break;
 			case function_t: 
 				delete (Function*)data; 

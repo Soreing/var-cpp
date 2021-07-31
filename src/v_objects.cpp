@@ -145,6 +145,19 @@ size_t writeObject_t(object &arr, char* buff, const size_t size)
     return headerSize + totBytes;
 }
 
+// Writes a blob_t type var to a buffer with a size
+size_t writeBlob_t(blob val, char* buff, const size_t size)
+{
+    char header[32];
+    size_t bytes = val.size;
+    size_t headerSize = setTag(blob_t, header, bytes);
+    ASSERT_SIZE(size, headerSize + bytes);
+    
+    memcpy(buff, header, headerSize);
+    memcpy(buff+headerSize, val.arr, bytes);
+    return headerSize + bytes;
+}
+
 // Writes a function_t type var to a buffer with a size
 // Not to be actually used. Functions can't be exported
 size_t writeFunction_t(char* buff, const size_t size)
@@ -175,6 +188,7 @@ size_t writeBinary(const var& val, char* buff, const int size)
         case text_t:      return writeText_t(*(str*)val.getData(), buff, size);
         case array_t:     return writeArray_t(*(array*)val.getData(), buff, size);
         case object_t:    return writeObject_t(*(object*)val.getData(), buff, size);
+        case blob_t:      return writeBlob_t(*(blob*)val.getData(), buff, size);
         case function_t:  return writeFunction_t(buff, size);
         case undefined_t: return writeUndefined_t(buff, size);
     }
@@ -299,6 +313,7 @@ var readBinary(char* buff, const size_t size, size_t* bytes)
         {   case text_t:    return var(str(buff+headerSize, byteCount));
             case array_t:   return makeArray(buff+headerSize, size, byteCount, elemCount);
             case object_t:  return makeObject(buff+headerSize, size, byteCount, elemCount);
+            case blob_t:    return var(blob{buff+headerSize, byteCount});
         }
     }
 

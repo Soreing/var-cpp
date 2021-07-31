@@ -37,6 +37,7 @@ int var::compare(const var &right) const
 		case real_t:   lVal = (double)*this; break;
 		case array_t:  lTxt = toString(); break;
 		case object_t: lTxt = toString(); break;
+		case blob_t:   lTxt = toString(); break;
 	}
 
 	if(right.type == text_t)
@@ -52,6 +53,7 @@ int var::compare(const var &right) const
 		case real_t:   rVal = (double)right; break;
 		case array_t:  rTxt = right.toString(); break;
 		case object_t: rTxt = right.toString(); break;
+		case blob_t:   rTxt = right.toString(); break;
 	}
 
 	varType minType = type < right.type ? type : right.type;
