@@ -61,8 +61,10 @@ public:
 	var operator()(var p1, var p2, var p3, var p4, var p5, var p6, var p7, var p8) const;
 
 	// [] Operator for accessing attributes in Objects and elements in Arrays
-	var& operator[](str name) const;
-	var& operator[](size_t idx) const;
+	var& operator[](str name);
+	const var& operator[](str name) const;
+	var& operator[](size_t idx);
+	const var& operator[](size_t idx) const;
 
 	// C-Style Type Cast Operators
 	explicit operator bool() const;
@@ -146,7 +148,7 @@ public:
 	void splice(int beg, int count, const var &elements);
 
 	// Returns a sub section of the array
-	var slice(int beg, int end = 0);
+	var slice(int beg, int end = 0) const;
 
 	// Joins the elements in the array with a separator string
 	str join(str separator = ",") const;
@@ -177,7 +179,9 @@ public:
 
 	// Calls a function with each element in an array
 	void forEach(void(*fnc)(var &e));
+	void forEach(void(*fnc)(const var &e)) const;
 	void forEach(void(*fnc)(var &e, void* params), void* params);
+	void forEach(void(*fnc)(const var &e, void* params), void* params) const;
 
 	// Convert the value of the var to the appropriate string based on type
 	// Objects and arrays print all elements

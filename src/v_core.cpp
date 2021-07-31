@@ -184,7 +184,22 @@ var& var::operator=(var(*val)())
 
 // Finds an attribute in an object by name and returns it
 // If no attribute is found, a new one is created and returned
-var& var::operator[](str name) const
+const var& var::operator[](str name) const
+{
+	ASSERT_OBJECT
+	vec<atr>* attr = (vec<atr>*)data;
+
+	for (size_t i = 0; i < attr->size(); i++)
+	{	if (name == attr->at(i).name)
+		{	return attr->at(i).val;
+		}
+	}
+
+	attr->push_back(atr{name, var()});
+	return attr->at(attr->size() - 1).val;
+}
+
+var& var::operator[](str name)
 {
 	ASSERT_OBJECT
 	vec<atr>* attr = (vec<atr>*)data;
@@ -201,7 +216,19 @@ var& var::operator[](str name) const
 
 // Finds an element in an array by index and returns it
 // If the array is too small, resize it.
-var& var::operator[](size_t idx) const
+const var& var::operator[](size_t idx) const
+{
+	ASSERT_ARRAY
+	array* arr = (array*)data;
+
+	if (idx >= arr->size())
+	{	arr->resize(idx+1);
+	}
+
+	return (*arr)[idx];
+}
+
+var& var::operator[](size_t idx)
 {
 	ASSERT_ARRAY
 	array* arr = (array*)data;

@@ -245,9 +245,29 @@ void var::forEach(void(*fnc)(var &e))
     }
 }
 
+void var::forEach(void(*fnc)(const var &e)) const
+{
+    ASSERT_ARRAY(this);
+    array* arr = (array*)data;
+
+    for(size_t i=0; i < arr->size(); i++)
+    {   fnc((*arr)[i]);
+    }
+}
+
 // Calls a function for each element in the array
 // Additional parameter package supplied to the function as a void* pointer
 void var::forEach(void(*fnc)(var &e, void* params), void* params)
+{
+    ASSERT_ARRAY(this);
+    array* arr = (array*)data;
+
+    for(size_t i=0; i < arr->size(); i++)
+    {   fnc((*arr)[i], params);
+    }
+}
+
+void var::forEach(void(*fnc)(const var &e, void* params), void* params) const
 {
     ASSERT_ARRAY(this);
     array* arr = (array*)data;
@@ -448,7 +468,7 @@ int var::erase(int beg, int end)
 // Returns a copy of a sub section of the array between specified indexes
 // Negative indexes are counted from the end of the array
 // Asserts that the range must be valid
-var var::slice(int beg, int end)
+var var::slice(int beg, int end) const
 {
     ASSERT_ARRAY(this);
     array* arr = (array*)data;
