@@ -4,16 +4,17 @@
 #include <string>
 #include <vector>
 
-#define vec std::vector		// std::vector shortcut macro
-#define array vec<var>		// std::vector<var> shortcut macro
-typedef std::string str;	// std::string shortcut macro
-typedef const char* cstr;	// const char* c-string shortcut macro
-
 // Internal var types for operations
 enum varType { boolean_t, integer_t, real_t, text_t, array_t, object_t, function_t, undefined_t };
 
-// Empty base class for var objects
-class Object {};
+struct Function;			// Functions
+struct atr;					// Attributes
+
+#define vec std::vector		// std::vector shortcut macro
+#define array vec<var>		// std::vector<var> shortcut macro
+#define object vec<atr>		// std::vector<att> shortcut macro
+typedef std::string str;	// std::string shortcut macro
+typedef const char* cstr;	// const char* c-string shortcut macro
 
 
 // Dynamic typeless variable class
@@ -42,8 +43,8 @@ public:
 	var& operator=(float  val);
 	var& operator=(str    val);
 	var& operator=(cstr   val);
-	var& operator=(Object val);
-	var& operator=(const array &val);
+	var& operator=(const object &val);
+	var& operator=(const array  &val);
 
 	template<class... Args>
 	var& operator=(var(*val)(Args...));

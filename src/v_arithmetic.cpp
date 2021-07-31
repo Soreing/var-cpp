@@ -3,10 +3,10 @@
 // Create a new object with a list of attributes combined from 2 objects
 void addObjects(const var &left, const var &right, var &res)
 {
-	res = Object();
-	vec<atr>* lAtr = (vec<atr>*)left.getData();
-	vec<atr>* rAtr = (vec<atr>*)right.getData();
-	vec<atr>* aAtr = (vec<atr>*)res.getData();
+	res = object{};
+	object* lAtr = (object*)left.getData();
+	object* rAtr = (object*)right.getData();
+	object* aAtr = (object*)res.getData();
 	
 	size_t size = lAtr->size() + rAtr->size();
 	aAtr->resize(size);
@@ -49,8 +49,8 @@ void addArrays(const var &left, const var &right, var &res)
 // Copies and Adds the attributes from one object to another
 void mergeObjects(var &left, const var &right)
 {
-	vec<atr>* lAtr = (vec<atr>*)left.getData();
-	vec<atr>* rAtr = (vec<atr>*)right.getData();
+	object* lAtr = (object*)left.getData();
+	object* rAtr = (object*)right.getData();
 	
 	size_t idx = lAtr->size();
 	size_t size = lAtr->size() + rAtr->size();
@@ -66,8 +66,8 @@ void mergeObjects(var &left, const var &right)
 // Copies and Adds the elements from one array to another
 void mergeArrays(var &left, const var &right)
 {
-	vec<var>* lArr = (vec<var>*)left.getData();
-	vec<var>* rArr = (vec<var>*)right.getData();
+	array* lArr = (array*)left.getData();
+	array* rArr = (array*)right.getData();
 	
 	size_t idx = lArr->size();
 	size_t size = lArr->size() + rArr->size();

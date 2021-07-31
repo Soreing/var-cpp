@@ -40,8 +40,8 @@ var::var(const var &val)
 var& var::operator=(const var &val)
 {
 	type = val.type;
-	vec<var>* elements   = NULL;
-	vec<atr>* attributes = NULL;
+	array* elements   = NULL;
+	object* attributes = NULL;
 
 	switch (type)
 	{	case boolean_t:
@@ -61,21 +61,21 @@ var& var::operator=(const var &val)
 			break;
 
 		case array_t:
-			elements = (vec<var>*)val.data;
-			data = (void*)new vec<var>(elements->size());
+			elements = (array*)val.data;
+			data = (void*)new array(elements->size());
 
 			for (size_t i = 0; i < elements->size(); i++)
-			{	(*(vec<var>*)data)[i] = (*elements)[i];
+			{	(*(array*)data)[i] = (*elements)[i];
 			}
 
 			break;
 
 		case object_t:
-			attributes = (vec<atr>*)val.data;
-			data = (void*)new vec<atr>(attributes->size());
+			attributes = (object*)val.data;
+			data = (void*)new object(attributes->size());
 
 			for (size_t i = 0; i < attributes->size(); i++)
-			{	(*(vec<atr>*)data)[i] = (*attributes)[i];
+			{	(*(object*)data)[i] = (*attributes)[i];
 			}
 
 			break;
@@ -166,11 +166,16 @@ var& var::operator=(const array &val)
 	return *this;
 }
 
-var& var::operator=(Object val)
+var& var::operator=(const object &val)
 {
 	CELAN_PREVIOUS_ALLOCATION
 	type = object_t;
-	data = (void*)new vec<atr>();
+	data = (void*)new object(val.size());
+
+	for (size_t i = 0; i < val.size(); i++)
+	{	(*(object*)data)[i] = val[i];
+	}
+
 	return *this;
 }
 
@@ -187,7 +192,7 @@ var& var::operator=(var(*val)())
 const var& var::operator[](str name) const
 {
 	ASSERT_OBJECT
-	vec<atr>* attr = (vec<atr>*)data;
+	object* attr = (object*)data;
 
 	for (size_t i = 0; i < attr->size(); i++)
 	{	if (name == attr->at(i).name)
@@ -202,7 +207,7 @@ const var& var::operator[](str name) const
 var& var::operator[](str name)
 {
 	ASSERT_OBJECT
-	vec<atr>* attr = (vec<atr>*)data;
+	object* attr = (object*)data;
 
 	for (size_t i = 0; i < attr->size(); i++)
 	{	if (name == attr->at(i).name)
@@ -433,7 +438,7 @@ str var::toString() const
 	}
 	else if (type == object_t)
 	{
-		vec<atr>* attr = (vec<atr>*)data;
+		object* attr = (object*)data;
 		if (attr->size() == 0)
 		{	return "{ }";
 		}
@@ -488,7 +493,7 @@ void var::clean()
 				delete (array*)data; 
 				break;
 			case object_t: 
-				delete (vec<atr>*)data; 
+				delete (object*)data; 
 				break;
 			case function_t: 
 				delete (Function*)data; 

@@ -124,7 +124,7 @@ size_t writeAttrib_t(atr &att, char* buff, const size_t size)
 }
 
 // Writes an object_t type var to a buffer with a size
-size_t writeObject_t(vec<atr> &arr, char* buff, const size_t size)
+size_t writeObject_t(object &arr, char* buff, const size_t size)
 {
     char header[32];
     size_t elements = arr.size();
@@ -174,7 +174,7 @@ size_t writeBinary(const var& val, char* buff, const int size)
         case real_t:      return writeReal_t(*(double*)val.getData(), buff, size);
         case text_t:      return writeText_t(*(str*)val.getData(), buff, size);
         case array_t:     return writeArray_t(*(array*)val.getData(), buff, size);
-        case object_t:    return writeObject_t(*(vec<atr>*)val.getData(), buff, size);
+        case object_t:    return writeObject_t(*(object*)val.getData(), buff, size);
         case function_t:  return writeFunction_t(buff, size);
         case undefined_t: return writeUndefined_t(buff, size);
     }
@@ -255,8 +255,8 @@ size_t readAttrib_t(atr &att, char* buff, const size_t size)
 // Creates and populates a var with object_t type from the buffer
 var makeObject(char* buff, size_t size, size_t bytes, size_t elements)
 {
-    var res = Object();
-    vec<atr>* arr = (vec<atr>*)res.getData();
+    var res = object{ };
+    object* arr = (object*)res.getData();
     arr->resize(elements);
 
     size_t totUsed=0;
@@ -348,7 +348,7 @@ str var::toJSON(str indent) const
     }
 
     if(type == object_t)
-    {   vec<atr>* arr = (vec<atr>*)data;
+    {   object* arr = (object*)data;
         size_t len = arr->size();
         size_t end = len -1;
 
