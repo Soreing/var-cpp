@@ -126,3 +126,15 @@ bool var::operator>=(const var &right) const
 	int res = compare(right);
 	return res == 2 || res == 1;
 }
+
+// Compares the internal type of the var to a given type, returns true if it matches
+bool var::operator==(const varType t) const
+{
+	return type == t;
+}
+
+// Compares the internal type of the var to a given type, returns true if it matches
+bool operator==(const varType t, const var& val)
+{
+	return val.getType() == t;
+}

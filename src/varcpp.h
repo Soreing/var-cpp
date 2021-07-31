@@ -104,6 +104,8 @@ public:
 	bool operator<=(const var &right) const;
 	bool operator>=(const var &right) const;
 
+	bool operator==(const varType t) const;
+
 	// Gets the length of an array
 	size_t length() const;
 
@@ -199,8 +201,29 @@ public:
 	~var();
 };
 
+// Compares the internal type of the var to a given type, returns true if it matches
+bool operator==(const varType t, const var& val);
+
 // Load the value of the var to the ostream 
 std::ostream& operator<<(std::ostream& o, const var& v);
+
+// Write var object to binary data
+size_t writeBinary(const var& val, char* buff, const int size);
+
+// Read var object from binary data
+var readBinary(char* buff, const size_t size, size_t* bytes = NULL);
+
+// Function structure
+struct Function
+{	int params;
+	void* fptr;
+};
+
+// Named attributes for var objects
+struct atr
+{	str name;
+	var val;
+};
 
 template <class T>
 var::var(T val)
@@ -220,22 +243,5 @@ var& var::operator=(var(*val)(Args...))
 	data = (void*)new Function{sizeof...(Args), val};
 	return *this;
 }
-
-// Write var object to binary data
-size_t writeBinary(const var& val, char* buff, const int size);
-// Read var object from binary data
-var readBinary(char* buff, const size_t size, size_t* bytes = NULL);
-
-// Function structure
-struct Function
-{	int params;
-	void* fptr;
-};
-
-// Named attributes for var objects
-struct atr
-{	str name;
-	var val;
-};
 
 #endif
