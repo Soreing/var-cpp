@@ -1,17 +1,14 @@
 # var-cpp
 
-</br>
-## Description
+# Description
 
 var-cpp is a C++ library for creating JavaScript-like var variables that allow the assignment of data or functions with different types at runtime. The library is complete with relational and arithmetic operators, as well as functions for working with arrays.
 
-</br>
-## Installation
+# Installation
 Include `varcpp.h` in your project for defining the var class. If you want to compile the library from source, include the cpp files for the implementation, all following the format `v_*.cpp`. Alternatively, you can compile the source code to a static library and include it that way.
 
-</br>
-## Usage
-### Creating Variables
+# Usage
+## Creating Variables
 You can declare a var object and assign it data. Internally the object has the following types: boolean, integer, real number, text, array, object, binary object, functions, undefined.
 ```c++
 var bol = true;
@@ -26,8 +23,7 @@ var number = 10;
 number = "Ten";
 ```
 
-</br>
-### Casting to Basic Types
+## Casting to Basic Types
 Numerical type vars can be explicitly casted to some basic C++ types using C-style casting. Currently you can cast to `bool`, `int` and `double`.
 ```c++
 var vdec = 10.2;
@@ -39,8 +35,7 @@ var txt = "10.2";
 double dec = (double)txt; 
 ```
 
-</br>
-### Printing and Displaying
+## Printing and Displaying
 You can use the toString() function which returns some string representation of the variable, or you an also use the ostream operator, which is overloaded to call the toString() function.
 ```c++
 var num = 5;
@@ -52,8 +47,7 @@ Output:
 5  5
 ```
 
-</br>
-### Working with Arrays
+## Working with Arrays
 Array type vars use vectors to store elements and resize dynamically. Elements in a var array can have different types. To create an array, you can use the `array` macro.
 ```c++
 var emp = array{} //Creates an empty array
@@ -78,8 +72,7 @@ Output:
 [ 10.2, 2, 3, undfined, Sample Text ]
 ```
 
-</br>
-### Working with Objects
+## Working with Objects
 Object type vars use a vector of attributes, where each attribute has a string name and a var value. To create an object, you can use the `object` macro.
 ```c++
 var emp = object{} //Creates an empty object
@@ -118,8 +111,7 @@ Output:
 undefined
 ```
 
-</br>
-### Binary Objects and Byte Streams
+## Binary Objects and Byte Streams
 Any C/C++ object or byte stream can be stored as a blob type. To create a Binary Object, you can use the blob structure, which expects a char pointer `(char*)` and number of bytes.
 ```c++
 class Box{
@@ -149,8 +141,7 @@ Output:
 ```
 If you want to retrieve a pointer to the object, you can use the getter function `getData()`, then cast it to the appropriate pointer from `void*`
 
-</br>
-### Functions as Variables
+## Functions as Variables
 You can assign functions to var objects and call them with arguments later. Functions **must** use only var return type and arguments, otherwise the behavior is unpredicrable.
 ```c++
 var add(var left, var right){
@@ -173,8 +164,7 @@ undefined
 undefined
 ```
 
-</br>
-### Logical and Relational Operators
+## Logical and Relational Operators
 Logical operators are overloaded to explicitly cast vars to booleans. For numeric types, any value that is non zero is `true`. For other types, any value is `true`. undefined is always `false`.
 ```c++
 var tru = true;
@@ -228,8 +218,7 @@ Output:
 Same
 ```
 
-</br>
-### Arithmetic Operators
+## Arithmetic Operators
 All basic math operations are implemented for numerical types, which includes `boolean_t`, `integer_t` and `real_t`. When two different types are used, the result always matches the more complex type.
 ```
 var num = 50;
@@ -285,8 +274,7 @@ Output:
 [ true, 5, 10.2, Sample Text, 99.75 ]
 ```
 
-</br>
-### Array Functions
+## Array Functions
 Several functions from JavaScript and C++ vectors are implemented to work with vars of `array_t` type.
-</br></br>
+
 `erase`, `every`, `fill`, `filter`, `find`, `findIndex`, `forEach`, `includes`, `indexOf`, `insert`, `join`, `length`, `pop`, `push`, `reverse`, `shift`, `slice`, `some`, `splice`, `unshift`
