@@ -220,7 +220,7 @@ Same
 
 ## Arithmetic Operators
 All basic math operations are implemented for numerical types, which includes `boolean_t`, `integer_t` and `real_t`. When two different types are used, the result always matches the more complex type.
-```
+```c++
 var num = 50;
 var dec = 10.5;
 cout << (num + dec) << endl;
@@ -262,7 +262,7 @@ Sample Text5
 ```
 
 When used between two arrays or objects, the `+` operator creates a new array or object that contains all the elements or attributes from each operand. the `+=` operator merges the elements/attributes of the right into the left hand operand.
-```
+```c++
 var ar1 = array{true, 5, 10.2};
 var ar2 = array{"Sample Text", 99.75};
 ar1 += ar2;
